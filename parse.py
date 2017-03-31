@@ -31,9 +31,16 @@ def parseDataIntoList():
                 filteredList.append(lineDict)
         return filteredList
 
+def checkNumberOfUniqueProfs(filteredList):
+    listOfInstructors = []
+    for obj in filteredList:
+        listOfInstructors.append(obj['Instructor'])
+    setOfInstructors = set(listOfInstructors)
+    print setOfInstructors
 
 def main():
-    list = parseDataIntoList()
+    filteredList = parseDataIntoList()
+    checkNumberOfUniqueProfs(filteredList)
     
 
 
