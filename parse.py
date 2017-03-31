@@ -31,9 +31,10 @@ def parseDataIntoList():
                 filteredList.append(lineDict)
         return filteredList
 
+
 def main():
-    parseDataIntoList()
- 
+    list = parseDataIntoList()
+    
 
 
 
