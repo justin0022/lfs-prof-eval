@@ -1,6 +1,6 @@
 import csv
 
-def parseData():
+def parseDataIntoList():
     filteredList = []
     # need to keep col 3,4,7,8,9,10,11,12,13,16,17,18,19,22,23,24,25
     with open('data.csv', 'rb') as csvfile:
@@ -32,7 +32,7 @@ def parseData():
         return filteredList
 
 def main():
-    parseData()
+    parseDataIntoList()
  
 
 
