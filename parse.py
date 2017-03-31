@@ -27,7 +27,7 @@ def parseData():
                         header_row[24]: line[24],
                         header_row[25]: line[25]}
             # filter out any rows that have fewer than 5 submissions and don't have question code IUMI06
-            if int(lineDict['Submissions']) > 5 and lineDict['Question Code'] == 'IUMI06':
+            if int(lineDict['Submissions']) > 5 and (lineDict['Question Code'] == 'IUMI06' or lineDict['Question Code'] == 'IUMI06-5'):
                 filteredList.append(lineDict)
         return filteredList
 
