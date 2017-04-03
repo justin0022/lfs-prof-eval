@@ -15,11 +15,11 @@ var svg = d3.select('svg'),
     height = +svg.attr("height") - margin.top - margin.bottom,
     g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var x = d3.scaleBand().rangeRound([0,width]).padding(0),
+var x = d3.scaleBand().rangeRound([0,width]),
     y = d3.scaleLinear().rangeRound([height, 0])
 
 // display Akhtar, Yasmin for now
-var testInstructor = 'Akhtar, Yasmin'
+var testInstructor = 'Black, Jennifer'
 d3.csv('output.csv', function(error, data) {
     if (error) throw error;
 
@@ -27,6 +27,15 @@ d3.csv('output.csv', function(error, data) {
         return d.Instructor === testInstructor
     })
     period = instructorData.map(function(d) { return d.Period.slice(0,4)}).sort(function (a,b) { return a-b })
+
+    var countUniquePeriod = period.reduce(function(values, v) {
+        if (!values.set[v]) {
+            values.set[v] = 1;
+            values.count++;
+        }
+        return values;
+    }, { set: {}, count: 0 }).count;
+
     x.domain(period)
     y.domain([d3.min(instructorData, function(d) { return d['Instructor Avg'] }), 5])
 
@@ -45,7 +54,6 @@ d3.csv('output.csv', function(error, data) {
         .attr("dy", "0.71em")
         .attr("text-anchor", "end")
         .text("UMI6");
-    
 
     g.selectAll('.dot')
         .data(instructorData)
@@ -53,7 +61,7 @@ d3.csv('output.csv', function(error, data) {
         .attr('class', 'dot')
         //.attr('r', function(d) { return d.Submissions/10 })
         .attr('r', 4)
-        .attr('cx', function(d) { return x(d.Period.slice(0,4)) })
+        .attr('cx', function(d) { return x(d.Period.slice(0,4))+890/countUniquePeriod/2})
         .attr('cy', function (d) { return y(d['Instructor Avg']) })
         .on('mouseover', tip.show)
         .on('mouseout', tip.hide)
