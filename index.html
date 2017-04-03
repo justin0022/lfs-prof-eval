@@ -15,7 +15,7 @@ var svg = d3.select('svg'),
     height = +svg.attr("height") - margin.top - margin.bottom,
     g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var x = d3.scaleBand().rangeRound([0,width]).padding(0.1),
+var x = d3.scaleBand().rangeRound([0,width]).padding(0),
     y = d3.scaleLinear().rangeRound([height, 0])
 
 // display Akhtar, Yasmin for now
@@ -23,12 +23,13 @@ var testInstructor = 'Akhtar, Yasmin'
 d3.csv('output.csv', function(error, data) {
     if (error) throw error;
 
-    var AkhtarYasmin = data.filter(function(d) {
+    var instructorData = data.filter(function(d) {
         return d.Instructor === testInstructor
     })
-    period = AkhtarYasmin.map(function(d) { return d.Period.slice(0,4)}).sort(function (a,b) { return a-b })
+    period = instructorData.map(function(d) { return d.Period.slice(0,4)}).sort(function (a,b) { return a-b })
     x.domain(period)
-    y.domain([d3.min(AkhtarYasmin, function(d) { return d['Instructor Avg'] - 0.5 }), 5])
+    y.domain([d3.min(instructorData, function(d) { return d['Instructor Avg'] }), 5])
+
 
     g.append("g")
         .attr("class", "axis axis--x")
@@ -45,21 +46,15 @@ d3.csv('output.csv', function(error, data) {
         .attr("text-anchor", "end")
         .text("UMI6");
     
-    svg.selectAll('.dot')
-        .data(AkhtarYasmin)
+
+    g.selectAll('.dot')
+        .data(instructorData)
         .enter().append('circle')
         .attr('class', 'dot')
         //.attr('r', function(d) { return d.Submissions/10 })
         .attr('r', 4)
-        .attr('cx', function(d) { 
-            if (x(1 + Number(d.Period.slice(0,4)))) {
-                return x(1 + Number(d.Period.slice(0,4))) 
-            } else {
-                //hackish way to fix "off by one" axis error
-                return x(2016)+x(2016)-x(2015)
-            }      
-        })
-        .attr('cy', function (d) { return Number(y(d['Instructor Avg'])) + 20 })
+        .attr('cx', function(d) { return x(d.Period.slice(0,4)) })
+        .attr('cy', function (d) { return y(d['Instructor Avg']) })
         .on('mouseover', tip.show)
         .on('mouseout', tip.hide)
 })
