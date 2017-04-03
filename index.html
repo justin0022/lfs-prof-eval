@@ -19,7 +19,7 @@ var x = d3.scaleBand().rangeRound([0,width]),
     y = d3.scaleLinear().rangeRound([height, 0])
 
 // display Akhtar, Yasmin for now
-var testInstructor = 'Black, Jennifer'
+var testInstructor = 'Akhtar, Yasmin'
 d3.csv('output.csv', function(error, data) {
     if (error) throw error;
 
@@ -27,7 +27,7 @@ d3.csv('output.csv', function(error, data) {
         return d.Instructor === testInstructor
     })
     period = instructorData.map(function(d) { return d.Period.slice(0,4)}).sort(function (a,b) { return a-b })
-
+    
     var countUniquePeriod = period.reduce(function(values, v) {
         if (!values.set[v]) {
             values.set[v] = 1;
@@ -38,7 +38,6 @@ d3.csv('output.csv', function(error, data) {
 
     x.domain(period)
     y.domain([d3.min(instructorData, function(d) { return d['Instructor Avg'] }), 5])
-
 
     g.append("g")
         .attr("class", "axis axis--x")
@@ -71,7 +70,9 @@ var tip = d3.tip()
     .attr('class', 'd3-tip')
     .html(function(d) { 
         avg = Math.round(Number(d['Instructor Avg'])*100) / 100;
-        return "<strong>Events:</strong> <span style='color: white;'>" + avg + "</span>"; 
+        return "<strong>UMI6:</strong> <span style='color: white;'>" + avg + "</span>" + "<br>" 
+            + "<strong>Course:</strong> <span style='color: white;'>" + d.Course + "</span>" + "<br>" 
+            + "<strong>Term:</strong> <span style='color: white;'>" + d.Period + "</span>" ; 
     });
 svg.call(tip);
 
