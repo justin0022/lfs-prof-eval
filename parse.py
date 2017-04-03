@@ -27,21 +27,34 @@ def parseDataIntoList():
                         header_row[24]: line[24],
                         header_row[25]: line[25]}
             # filter out any rows that have fewer than 5 submissions and don't have question code IUMI06
-            if int(lineDict['Submissions']) > 5 and (lineDict['Question Code'] == 'IUMI06' or lineDict['Question Code'] == 'IUMI06-5'):
+            if int(lineDict['Submissions']) > 5 and lineDict['Question Code'] == 'IUMI06-5':
                 filteredList.append(lineDict)
         return filteredList
 
-def checkNumberOfUniqueProfs(filteredList):
+def printUniqueInstructors(filteredList):
     listOfInstructors = []
     for obj in filteredList:
         listOfInstructors.append(obj['Instructor'])
     setOfInstructors = set(listOfInstructors)
     print setOfInstructors
 
+def getProfNameUMI6(filteredList):
+    profNameUMI6 = []
+    for obj in filteredList:
+        listOfNecessaryDetails = [obj['Instructor'], obj['Period'], obj['Course'], obj['Instructor Avg']]
+        profNameUMI6.append(listOfNecessaryDetails)
+    return profNameUMI6
+
+def printCSVToOutput(givenList):
+    with open('output.csv', 'wb') as f:
+        writer = csv.writer(f)
+        writer.writerows(givenList)
+
 def main():
     filteredList = parseDataIntoList()
-    checkNumberOfUniqueProfs(filteredList)
-    
+    #printUniqueInstructors(filteredList)
+    listOfProfNameUMI6 = getProfNameUMI6(filteredList)
+    printCSVToOutput(listOfProfNameUMI6)
 
 
 
