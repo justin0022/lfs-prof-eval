@@ -7,7 +7,6 @@
 </header>
 <body>
 <svg width="960" height="500"></svg>
-<!-- load the d3.js library -->    
 
 <script>
 var svg = d3.select('svg'),
@@ -29,7 +28,7 @@ d3.csv('output.csv', function(error, data) {
     })
     period = AkhtarYasmin.map(function(d) { return d.Period.slice(0,4)}).sort(function (a,b) { return a-b })
     x.domain(period)
-    y.domain([d3.min(AkhtarYasmin, function(d) { return d['Instructor Avg'] }), 5])
+    y.domain([d3.min(AkhtarYasmin, function(d) { return d['Instructor Avg'] - 0.5 }), 5])
 
     g.append("g")
         .attr("class", "axis axis--x")
@@ -56,17 +55,20 @@ d3.csv('output.csv', function(error, data) {
             if (x(1 + Number(d.Period.slice(0,4)))) {
                 return x(1 + Number(d.Period.slice(0,4))) 
             } else {
+                //hackish way to fix "off by one" axis error
                 return x(2016)+x(2016)-x(2015)
             }      
         })
-        .attr('cy', function (d) { return y(d['Instructor Avg']) })
+        .attr('cy', function (d) { return Number(y(d['Instructor Avg'])) + 20 })
+        .on('mouseover', tip.show)
+        .on('mouseout', tip.hide)
 })
-
 
 var tip = d3.tip()
     .attr('class', 'd3-tip')
     .html(function(d) { 
-        return "<strong>Events:</strong> <span style='color: white;'>" + d.hit + "</span>"; 
+        avg = Math.round(Number(d['Instructor Avg'])*100) / 100;
+        return "<strong>Events:</strong> <span style='color: white;'>" + avg + "</span>"; 
     });
 svg.call(tip);
 
