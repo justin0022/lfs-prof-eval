@@ -18,6 +18,8 @@ var svg = d3.select('svg'),
 var x = d3.scaleBand().rangeRound([0,width]),
     y = d3.scaleLinear().rangeRound([height, 0])
 
+var color = d3.scaleOrdinal(d3.schemeCategory10)
+
 // display Akhtar, Yasmin for now
 var testInstructor = 'Akhtar, Yasmin'
 d3.csv('output.csv', function(error, data) {
@@ -27,7 +29,7 @@ d3.csv('output.csv', function(error, data) {
         return d.Instructor === testInstructor
     })
     period = instructorData.map(function(d) { return d.Period.slice(0,4)}).sort(function (a,b) { return a-b })
-    
+
     var countUniquePeriod = period.reduce(function(values, v) {
         if (!values.set[v]) {
             values.set[v] = 1;
@@ -58,10 +60,14 @@ d3.csv('output.csv', function(error, data) {
         .data(instructorData)
         .enter().append('circle')
         .attr('class', 'dot')
-        //.attr('r', function(d) { return d.Submissions/10 })
         .attr('r', 4)
-        .attr('cx', function(d) { return x(d.Period.slice(0,4))+890/countUniquePeriod/2})
+        .attr('cx', function(d) { return x(d.Period.slice(0,4))+890/countUniquePeriod/2 })
         .attr('cy', function (d) { return y(d['Instructor Avg']) })
+        .style('fill', function(d) { 
+            splitCourseName = d.Course.split(' ')
+            console.log(splitCourseName[0] + splitCourseName[1])
+            return color(splitCourseName[0] + splitCourseName[1])
+        })
         .on('mouseover', tip.show)
         .on('mouseout', tip.hide)
 })
