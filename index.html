@@ -16,21 +16,26 @@ var svg = d3.select('svg'),
     height = +svg.attr("height") - margin.top - margin.bottom,
     g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var x = d3.scaleBand().rangeRound([0,width]).padding(0.1)
-
-var y = d3.scaleLinear().rangeRound([height, 0])
+var x = d3.scaleBand().rangeRound([0,width]).padding(0.1),
+    y = d3.scaleLinear().rangeRound([height, 0])
 
 // display Akhtar, Yasmin for now
 var testInstructor = 'Akhtar, Yasmin'
-d3.csv('output.csv', function(data) {
+d3.csv('output.csv', function(error, data) {
+    if (error) throw error;
+
     var AkhtarYasmin = data.filter(function(d) {
         return d.Instructor === testInstructor
     })
+    period = AkhtarYasmin.map(function(d) { return d.Period.slice(0,4)}).sort(function (a, b) { return a-b })
+    x.domain(period)
 
-    x.domain(data.map(function(d) { return d.Period }))
     y.domain([0, 5])
 
-    
+    g.append("g")
+      .attr("class", "axis axis--x")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
 })
 
 
