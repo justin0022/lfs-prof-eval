@@ -27,7 +27,7 @@ d3.csv('output.csv', function(error, data) {
     var AkhtarYasmin = data.filter(function(d) {
         return d.Instructor === testInstructor
     })
-    period = AkhtarYasmin.map(function(d) { return d.Period.slice(0,4)}).sort(function (a, b) { return a-b })
+    period = AkhtarYasmin.map(function(d) { return d.Period.slice(0,4)}).sort(function (a,b) { return a-b })
     x.domain(period)
     y.domain([d3.min(AkhtarYasmin, function(d) { return d['Instructor Avg'] }), 5])
 
@@ -50,8 +50,15 @@ d3.csv('output.csv', function(error, data) {
         .data(AkhtarYasmin)
         .enter().append('circle')
         .attr('class', 'dot')
-        .attr('r', function(d) { return d.Submissions/10 })
-        .attr('cx', function(d) { return x(d.Period.slice(0,4)) })
+        //.attr('r', function(d) { return d.Submissions/10 })
+        .attr('r', 4)
+        .attr('cx', function(d) { 
+            if (x(1 + Number(d.Period.slice(0,4)))) {
+                return x(1 + Number(d.Period.slice(0,4))) 
+            } else {
+                return x(2016)+x(2016)-x(2015)
+            }      
+        })
         .attr('cy', function (d) { return y(d['Instructor Avg']) })
 })
 
