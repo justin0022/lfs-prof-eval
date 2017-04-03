@@ -41,12 +41,12 @@ def printUniqueInstructors(filteredList):
 def getProfNameUMI6(filteredList):
     profNameUMI6 = []
     for obj in filteredList:
-        listOfNecessaryDetails = [obj['Instructor'], obj['Period'], obj['Course'], obj['Instructor Avg']]
+        listOfNecessaryDetails = [obj['Instructor'], obj['Period'], obj['Course'], obj['Responses Expected'], obj['Submissions'], obj['Instructor Avg']]
         profNameUMI6.append(listOfNecessaryDetails)
     return profNameUMI6
 
 def printCSVToOutput(givenList):
-    with open('output.csv', 'wb') as f:
+    with open('output.csv', 'w') as f:
         writer = csv.writer(f)
         writer.writerows(givenList)
 
