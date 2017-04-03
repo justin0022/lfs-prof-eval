@@ -10,14 +10,11 @@
 <!-- load the d3.js library -->    
 
 <script>
-// display Akhtar, Yasmin for now
 var svg = d3.select('svg'),
     margin = {top: 20, right: 20, bottom: 30, left: 50},
     width = +svg.attr("width") - margin.left - margin.right,
     height = +svg.attr("height") - margin.top - margin.bottom,
     g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-
 
 var tip = d3.tip()
     .attr('class', 'd3-tip')
@@ -25,6 +22,19 @@ var tip = d3.tip()
         return "<strong>Events:</strong> <span style='color: white;'>" + d.hit + "</span>"; 
     });
 svg.call(tip);
+
+// display Akhtar, Yasmin for now
+var testInstructor = 'Akhtar, Yasmin'
+d3.csv('output.csv', function(data) {
+    var AkhtarYasmin = data.filter(function(x) {
+        return x.Instructor === testInstructor
+    })
+    x.domain(data.map(function (d) { return d.period }))
+    y.domain([0,5])
+})
+
+
+
 
 </script>
 </body>

@@ -40,6 +40,7 @@ def printUniqueInstructors(filteredList):
 
 def getProfNameUMI6(filteredList):
     profNameUMI6 = []
+    profNameUMI6.append(['Instructor', 'Period', 'Course', 'Responses Expected', 'Submissions', 'Instructor Avg'])
     for obj in filteredList:
         listOfNecessaryDetails = [obj['Instructor'], obj['Period'], obj['Course'], obj['Responses Expected'], obj['Submissions'], obj['Instructor Avg']]
         profNameUMI6.append(listOfNecessaryDetails)
