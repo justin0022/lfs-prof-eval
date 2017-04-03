@@ -53,7 +53,7 @@ def printCSVToOutput(givenList):
 
 def main():
     filteredList = parseDataIntoList()
-    #printUniqueInstructors(filteredList)
+    printUniqueInstructors(filteredList)
     listOfProfNameUMI6 = getProfNameUMI6(filteredList)
     printCSVToOutput(listOfProfNameUMI6)
 

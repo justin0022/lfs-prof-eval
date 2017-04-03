@@ -6,8 +6,8 @@
     <link rel="stylesheet" type="text/css" href="./style.css">
 </header>
 <body>
+<div id="input"></div>
 <svg width="960" height="500"></svg>
-
 <script>
 var svg = d3.select('svg'),
     margin = {top: 20, right: 20, bottom: 30, left: 50},
@@ -20,10 +20,15 @@ var x = d3.scaleBand().rangeRound([0,width]),
 
 var color = d3.scaleOrdinal(d3.schemeCategory10)
 
+var createInputSelector = function(data) {
+    var 
+}
+
 // display Akhtar, Yasmin for now
 var testInstructor = 'Akhtar, Yasmin'
 d3.csv('output.csv', function(error, data) {
     if (error) throw error;
+    createInputSelector(data);
 
     var instructorData = data.filter(function(d) {
         return d.Instructor === testInstructor
