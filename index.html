@@ -29,7 +29,6 @@ d3.csv('output.csv', function(error, data) {
     })
     period = AkhtarYasmin.map(function(d) { return d.Period.slice(0,4)}).sort(function (a, b) { return a-b })
     x.domain(period)
-
     y.domain([0, 5])
 
     g.append("g")
