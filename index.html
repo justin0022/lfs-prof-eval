@@ -1,21 +1,30 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<style> /* set the CSS */
-
-body { font: 12px Arial;}
-
-</style>
+<header>
+    <script src="./node_modules/d3/build/d3.min.js"></script>
+    <script src="./node_modules/d3-tip/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="./style.css">
+</header>
 <body>
 <svg width="960" height="500"></svg>
 <!-- load the d3.js library -->    
-<script src="http://d3js.org/d3.v3.min.js"></script>
-<script>
 
+<script>
+// display Akhtar, Yasmin for now
 var svg = d3.select('svg'),
     margin = {top: 20, right: 20, bottom: 30, left: 50},
     width = +svg.attr("width") - margin.left - margin.right,
     height = +svg.attr("height") - margin.top - margin.bottom,
     g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+
+var tip = d3.tip()
+    .attr('class', 'd3-tip')
+    .html(function(d) { 
+        return "<strong>Events:</strong> <span style='color: white;'>" + d.hit + "</span>"; 
+    });
+svg.call(tip);
 
 </script>
 </body>

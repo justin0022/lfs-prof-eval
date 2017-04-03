@@ -1,0 +1,23 @@
+{
+  "name": "lfs-prof-eval",
+  "version": "1.0.0",
+  "description": "visualization and analytics of student evaluations of profs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/justin0022/lfs-prof-eval.git"
+  },
+  "author": "Justin Lee",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/justin0022/lfs-prof-eval/issues"
+  },
+  "homepage": "https://github.com/justin0022/lfs-prof-eval#readme",
+  "dependencies": {
+    "d3": "^4.7.4",
+    "d3-tip": "^0.7.1"
+  }
+}
