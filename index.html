@@ -29,7 +29,7 @@ d3.csv('output.csv', function(error, data) {
     })
     period = AkhtarYasmin.map(function(d) { return d.Period.slice(0,4)}).sort(function (a, b) { return a-b })
     x.domain(period)
-    y.domain([0, 5])
+    y.domain([d3.min(AkhtarYasmin, function(d) { return d['Instructor Avg'] }), 5])
 
     g.append("g")
         .attr("class", "axis axis--x")
@@ -46,7 +46,13 @@ d3.csv('output.csv', function(error, data) {
         .attr("text-anchor", "end")
         .text("UMI6");
     
-
+    svg.selectAll('.dot')
+        .data(AkhtarYasmin)
+        .enter().append('circle')
+        .attr('class', 'dot')
+        .attr('r', function(d) { return d.Submissions/10 })
+        .attr('cx', function(d) { return x(d.Period.slice(0,4)) })
+        .attr('cy', function (d) { return y(d['Instructor Avg']) })
 })
 
 
