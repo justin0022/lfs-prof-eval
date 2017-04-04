@@ -9,6 +9,7 @@
     <h1 id="title"></h1>
     <select id="input" onChange='handleSelectChange()'></select>
     <svg width="960" height="500"></svg>
+    <p>Please note: all scores with 5 or fewer responses have been discarded</p>
 <script>
 (function createInputSelector() {
     var profs = ['Wittman, Hannah', 'Hammond, Gail', 'Elisia, Ingrid', 'Valley, William', 'Lamers, Yvonne', 'Liew, Mark', 'Riseman, Andrew', 'Stopps, Gregory', 'Black, Thomas', 'von Keyserlingk, Marina', 'Friesen, Erin', 'Novak, Elizabeth', 'Lewis, Delisa', 'Vercammen, James', 'Jovel, Eduardo', 'Fortin, Marie-Claude', 'Li-Chan, Eunice', 'Madadi Noei, Azita', 'Barr, Susan', 'Castellanos Hurtado, Valeria', 'Sandberg, Gary', 'Cullen, Laura', 'Simmons, Dean', 'Cerri, Ronaldo', 'Burton, Bruce', 'Lavkulich, Leslie', 'Izadi Shavakand, Fariba', 'Daly, Zachary', 'Smit, Rosanne', 'Holm, Wendy', 'Arthur, Jennifer', 'Cliff, Margaret', 'Cinq-Mars, Crystal', 'Lund, Steven', 'Green, Timothy', 'Rajamahendran, Rajadurai', 'Silper, Bruna', 'Snow, Mary', 'Anema, Aranka', 'Xu, Zhaoming', 'Allen, Kevin', 'Chan, Judy', 'McHugh, Duncan', 'Raisinghani, Latika', 'Measday, Vivien', 'Holowaychuk, Sean', 'Walker, Kristen', 'Hilmer, P', 'Shackleton, David', 'Brown, Sandra', 'Temu, Alice', 'Johnson, Michael', 'Saenz Garza, Natalia', 'Van Vuuren, Hendrik', 'Zawistowski, Jerzy', 'Meng, Guangtao', 'Zibrik, Deborah', 'Scaman, Christine', 'Tugault-Lafleur, Claire', 'Farrell, Anthony', 'McQueen, Jennifer', 'Cant, Meghann', 'Kovacevic, Jovana', 'Ormandy, Elisabeth', 'Ellis, Brian', 'Yaghmaee, Parastoo', 'Smukler, Sean', 'Schuppli, Catherine', 'Wilson, Julie', 'Gulati, Sumeet', 'Upadhyaya, Mahesh', 'Traviss, Karol', 'Chen, Xiumin', 'Ackerman, Paige', 'Novak, Mike', 'Marshall, Valin', 'Rushen, Jeffrey', 'Baker-French, Sophia', 'Ross, Nancy', 'Kitts, David', 'Miladinovic, Zoran', 'Phasuk, Suvaporn', 'Krzic, Maja', 'Kasten, Gerry', 'Chapman, Gwenneth', 'Wiseman, Kelleen', 'Whitfield, Kyly', 'Rojas, Alejandro', 'Wang, Siyun', 'Barichello, Richard', 'Yada, Rickey', 'Castellarin, Simone', 'Dubois, Sara', 'Akhtar, Yasmin', 'Burnett, Tracy', 'Cheung, Imelda', 'Cowan, Shannon', 'Rideout, Candice', 'Schreier, Hanspeter', 'Bomke, Arthur', 'Keeney, Kristie', 'Liceaga, Andrea', 'Jolliffe, Peter', 'Facon, Michel', 'Kafka, Tamar', 'Black, Jennifer', 'Sullivan, Thomas', 'Oikawa, Chris', 'Robertson, Rebecca', 'Makowska, Inez Joanna', 'Fraser, David', 'McAusland, Carol', 'Bennett, Christopher', 'Isman, Murray', 'McLean, Judy', 'Mroz, Lawrence', 'Wasik, Ronald', 'Weary, Daniel', 'Rankin, Joanne', 'Karakochuk, Crystal', 'Lu, Xiaonan', 'Alizadeh Pasdar, Nooshin', 'Skura, Brenton', 'McArthur, David']
@@ -103,13 +104,16 @@ var draw = function(instructor) {
             .data(color.domain())
             .enter().append("g")
             .attr("class", "legend")
+            .attr("id", function(d) { return d} )
             .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; })
             .on('click', function(d) {
-                if (document.getElementsByClassName(d)[0].style.display == 'none') {
+                if (document.getElementsByClassName(d)[0].style.display === 'none') {
                     d3.selectAll("." + d).style('display', '')    
+                    d3.select('#' + d).style('opacity', '1')
                 }
                 else { 
                     d3.selectAll("." + d).style('display', 'none')
+                    d3.select('#' + d).style('opacity', '0.3')
                 }
             });
 
