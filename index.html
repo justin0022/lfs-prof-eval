@@ -126,7 +126,7 @@ var draw = function(instructor) {
                 }
                 else { 
                     d3.selectAll("." + d).style('display', 'none')
-                    d3.select('#' + d).style('opacity', 0.3)
+                    d3.select('#' + d).style('opacity', 0.4)
                 }
             });
 
@@ -135,7 +135,8 @@ var draw = function(instructor) {
             .attr("x", width - 18)
             .attr("width", 18)
             .attr("height", 18)
-            .style("fill", color);
+            .style("fill", color)
+            .attr("opacity", 0.4);
 
         // draw legend text
         legend.append("text")
