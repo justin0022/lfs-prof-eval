@@ -8,6 +8,7 @@
 <body>
     <div style="margin-left: 30px;">
         <h1 id="title"></h1>
+        <p id="max-min"></p>
         <select id="input" onChange='handleSelectChange()'></select>
     </div>
     <svg width="1800" height="700"></svg>
@@ -50,6 +51,8 @@ var draw = function(instructor) {
     var title = document.getElementById('title')
     title.innerText = instructor
 
+    var maxmin = document.getElementById('max-min')
+
     d3.csv('output.csv', function(error, data) {
         if (error) throw error;
 
@@ -66,8 +69,15 @@ var draw = function(instructor) {
             return values;
         }, { set: {}, count: 0 }).count;
 
+        var min = Math.round(d3.min(instructorData, function(d) { return d['Instructor Avg']})*100)/100
+        var max = Math.round(d3.max(instructorData, function(d) { return d['Instructor Avg']})*100)/100
+
+        var maxMinMessage = "The minimum score is " + min + ". " + "The maximum score is " + max + "."
+
+        maxmin.innerText = maxMinMessage
+
         x.domain(period)
-        y.domain([d3.min(instructorData, function(d) { return d['Instructor Avg'] }), 5])
+        y.domain([d3.min(instructorData, function(d) { return d['Instructor Avg'] }), d3.max(instructorData, function(d) { return d['Instructor Avg'] })])
 
         g.append("g")
             .attr("class", "axis axis--x")
