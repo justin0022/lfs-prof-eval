@@ -8,7 +8,7 @@
 <body>
     <h1 id="title"></h1>
     <select id="input" onChange='handleSelectChange()'></select>
-    <svg width="960" height="500"></svg>
+    <svg width="1800" height="500"></svg>
     <p>Please note: all scores with 5 or fewer responses have been discarded</p>
 <script>
 (function createInputSelector() {
@@ -87,7 +87,7 @@ var draw = function(instructor) {
             .enter().append('circle')
             .attr('class', 'dot')
             .attr('r', 4)
-            .attr('cx', function(d) { return x(d.Period.slice(0,4))+890/countUniquePeriod/2 })
+            .attr('cx', function(d) { return x(d.Period.slice(0,4))+width/countUniquePeriod/2 })
             .attr('cy', function (d) { return y(d['Instructor Avg']) })
             .style('fill', function(d) { 
                 splitCourseName = d.Course.split(' ')
