@@ -6,77 +6,96 @@
     <link rel="stylesheet" type="text/css" href="./style.css">
 </header>
 <body>
-<div id="input"></div>
-<svg width="960" height="500"></svg>
+    <h1 id="title"></h1>
+    <select id="input" onChange='handleSelectChange()'></select>
+    <svg width="960" height="500"></svg>
 <script>
+(function createInputSelector() {
+    var profs = ['Wittman, Hannah', 'Hammond, Gail', 'Elisia, Ingrid', 'Valley, William', 'Lamers, Yvonne', 'Liew, Mark', 'Riseman, Andrew', 'Stopps, Gregory', 'Black, Thomas', 'von Keyserlingk, Marina', 'Friesen, Erin', 'Novak, Elizabeth', 'Lewis, Delisa', 'Vercammen, James', 'Jovel, Eduardo', 'Fortin, Marie-Claude', 'Li-Chan, Eunice', 'Madadi Noei, Azita', 'Barr, Susan', 'Castellanos Hurtado, Valeria', 'Sandberg, Gary', 'Cullen, Laura', 'Simmons, Dean', 'Cerri, Ronaldo', 'Burton, Bruce', 'Lavkulich, Leslie', 'Izadi Shavakand, Fariba', 'Daly, Zachary', 'Smit, Rosanne', 'Holm, Wendy', 'Arthur, Jennifer', 'Cliff, Margaret', 'Cinq-Mars, Crystal', 'Lund, Steven', 'Green, Timothy', 'Rajamahendran, Rajadurai', 'Silper, Bruna', 'Snow, Mary', 'Anema, Aranka', 'Xu, Zhaoming', 'Allen, Kevin', 'Chan, Judy', 'McHugh, Duncan', 'Raisinghani, Latika', 'Measday, Vivien', 'Holowaychuk, Sean', 'Walker, Kristen', 'Hilmer, P', 'Shackleton, David', 'Brown, Sandra', 'Temu, Alice', 'Johnson, Michael', 'Saenz Garza, Natalia', 'Van Vuuren, Hendrik', 'Zawistowski, Jerzy', 'Meng, Guangtao', 'Zibrik, Deborah', 'Scaman, Christine', 'Tugault-Lafleur, Claire', 'Farrell, Anthony', 'McQueen, Jennifer', 'Cant, Meghann', 'Kovacevic, Jovana', 'Ormandy, Elisabeth', 'Ellis, Brian', 'Yaghmaee, Parastoo', 'Smukler, Sean', 'Schuppli, Catherine', 'Wilson, Julie', 'Gulati, Sumeet', 'Upadhyaya, Mahesh', 'Traviss, Karol', 'Chen, Xiumin', 'Ackerman, Paige', 'Novak, Mike', 'Marshall, Valin', 'Rushen, Jeffrey', 'Baker-French, Sophia', 'Ross, Nancy', 'Kitts, David', 'Miladinovic, Zoran', 'Phasuk, Suvaporn', 'Krzic, Maja', 'Kasten, Gerry', 'Chapman, Gwenneth', 'Wiseman, Kelleen', 'Whitfield, Kyly', 'Rojas, Alejandro', 'Wang, Siyun', 'Barichello, Richard', 'Yada, Rickey', 'Castellarin, Simone', 'Dubois, Sara', 'Akhtar, Yasmin', 'Burnett, Tracy', 'Cheung, Imelda', 'Cowan, Shannon', 'Rideout, Candice', 'Schreier, Hanspeter', 'Bomke, Arthur', 'Keeney, Kristie', 'Liceaga, Andrea', 'Jolliffe, Peter', 'Facon, Michel', 'Kafka, Tamar', 'Black, Jennifer', 'Sullivan, Thomas', 'Oikawa, Chris', 'Robertson, Rebecca', 'Makowska, Inez Joanna', 'Fraser, David', 'McAusland, Carol', 'Bennett, Christopher', 'Isman, Murray', 'McLean, Judy', 'Mroz, Lawrence', 'Wasik, Ronald', 'Weary, Daniel', 'Rankin, Joanne', 'Karakochuk, Crystal', 'Lu, Xiaonan', 'Alizadeh Pasdar, Nooshin', 'Skura, Brenton', 'McArthur, David']
+    
+    var sortByLastName = profs.sort()
+
+    var sel = document.getElementById('input')
+
+    var populateSelector = sortByLastName.map(function(x, i) {
+        var opt = document.createElement('option')
+        opt.innerHTML = x
+        opt.value = x
+        sel.appendChild(opt)
+    })
+}())
+
+var handleSelectChange = function() {
+    // clears svg
+    d3.select('#parent').selectAll('*').remove()
+    var optionValue = document.getElementById('input').value
+    draw(optionValue)
+    console.log(optionValue)
+}
+
 var svg = d3.select('svg'),
     margin = {top: 20, right: 20, bottom: 30, left: 50},
     width = +svg.attr("width") - margin.left - margin.right,
     height = +svg.attr("height") - margin.top - margin.bottom,
-    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")").attr('id', 'parent');
 
 var x = d3.scaleBand().rangeRound([0,width]),
     y = d3.scaleLinear().rangeRound([height, 0])
 
 var color = d3.scaleOrdinal(d3.schemeCategory10)
 
-var createInputSelector = function(data) {
-    var 
-}
+var draw = function(instructor) {
+    d3.csv('output.csv', function(error, data) {
+        if (error) throw error;
 
-// display Akhtar, Yasmin for now
-var testInstructor = 'Akhtar, Yasmin'
-d3.csv('output.csv', function(error, data) {
-    if (error) throw error;
-    createInputSelector(data);
-
-    var instructorData = data.filter(function(d) {
-        return d.Instructor === testInstructor
-    })
-    period = instructorData.map(function(d) { return d.Period.slice(0,4)}).sort(function (a,b) { return a-b })
-
-    var countUniquePeriod = period.reduce(function(values, v) {
-        if (!values.set[v]) {
-            values.set[v] = 1;
-            values.count++;
-        }
-        return values;
-    }, { set: {}, count: 0 }).count;
-
-    x.domain(period)
-    y.domain([d3.min(instructorData, function(d) { return d['Instructor Avg'] }), 5])
-
-    g.append("g")
-        .attr("class", "axis axis--x")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x));
-
-    g.append("g")
-        .attr("class", "axis axis--y")
-        .call(d3.axisLeft(y).ticks(10))
-        .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 6)
-        .attr("dy", "0.71em")
-        .attr("text-anchor", "end")
-        .text("UMI6");
-
-    g.selectAll('.dot')
-        .data(instructorData)
-        .enter().append('circle')
-        .attr('class', 'dot')
-        .attr('r', 4)
-        .attr('cx', function(d) { return x(d.Period.slice(0,4))+890/countUniquePeriod/2 })
-        .attr('cy', function (d) { return y(d['Instructor Avg']) })
-        .style('fill', function(d) { 
-            splitCourseName = d.Course.split(' ')
-            console.log(splitCourseName[0] + splitCourseName[1])
-            return color(splitCourseName[0] + splitCourseName[1])
+        var instructorData = data.filter(function(d) {
+            return d.Instructor === instructor
         })
-        .on('mouseover', tip.show)
-        .on('mouseout', tip.hide)
-})
+        period = instructorData.map(function(d) { return d.Period.slice(0,4)}).sort(function (a,b) { return a-b })
 
+        var countUniquePeriod = period.reduce(function(values, v) {
+            if (!values.set[v]) {
+                values.set[v] = 1;
+                values.count++;
+            }
+            return values;
+        }, { set: {}, count: 0 }).count;
+
+        x.domain(period)
+        y.domain([d3.min(instructorData, function(d) { return d['Instructor Avg'] }), 5])
+
+        g.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x));
+
+        g.append("g")
+            .attr("class", "axis axis--y")
+            .call(d3.axisLeft(y).ticks(10))
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", "0.71em")
+            .attr("text-anchor", "end")
+            .text("UMI6");
+
+        g.selectAll('.dot')
+            .data(instructorData)
+            .enter().append('circle')
+            .attr('class', 'dot')
+            .attr('r', 4)
+            .attr('cx', function(d) { return x(d.Period.slice(0,4))+890/countUniquePeriod/2 })
+            .attr('cy', function (d) { return y(d['Instructor Avg']) })
+            .style('fill', function(d) { 
+                splitCourseName = d.Course.split(' ')
+                console.log(splitCourseName[0] + splitCourseName[1])
+                return color(splitCourseName[0] + splitCourseName[1])
+            })
+            .on('mouseover', tip.show)
+            .on('mouseout', tip.hide)
+    })
+
+}
 var tip = d3.tip()
     .attr('class', 'd3-tip')
     .html(function(d) { 
@@ -86,6 +105,7 @@ var tip = d3.tip()
             + "<strong>Term:</strong> <span style='color: white;'>" + d.Period + "</span>" ; 
     });
 svg.call(tip);
+
 
 
 </script>
