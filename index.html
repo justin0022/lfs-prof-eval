@@ -30,7 +30,9 @@ var handleSelectChange = function() {
     d3.select('#parent').selectAll('*').remove()
     var optionValue = document.getElementById('input').value
     draw(optionValue)
-    console.log(optionValue)
+    
+    var title = document.getElementById('title')
+    title.innerText = optionValue
 }
 
 var svg = d3.select('svg'),
