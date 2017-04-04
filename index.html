@@ -30,9 +30,6 @@ var handleSelectChange = function() {
     d3.select('#parent').selectAll('*').remove()
     var optionValue = document.getElementById('input').value
     draw(optionValue)
-    
-    var title = document.getElementById('title')
-    title.innerText = optionValue
 }
 
 var svg = d3.select('svg'),
@@ -47,6 +44,9 @@ var x = d3.scaleBand().rangeRound([0,width]),
 var color = d3.scaleOrdinal(d3.schemeCategory10)
 
 var draw = function(instructor) {
+    var title = document.getElementById('title')
+    title.innerText = instructor
+
     d3.csv('output.csv', function(error, data) {
         if (error) throw error;
 
@@ -104,11 +104,13 @@ var tip = d3.tip()
         avg = Math.round(Number(d['Instructor Avg'])*100) / 100;
         return "<strong>UMI6:</strong> <span style='color: white;'>" + avg + "</span>" + "<br>" 
             + "<strong>Course:</strong> <span style='color: white;'>" + d.Course + "</span>" + "<br>" 
-            + "<strong>Term:</strong> <span style='color: white;'>" + d.Period + "</span>" ; 
+            + "<strong>Term:</strong> <span style='color: white;'>" + d.Period + "</span>" + "<br>"
+            + "<strong>Course Size:</strong> <span style='color: white'>" + d['Responses Expected'] + "</span>" + "<br>"
+            + "<strong>Total Number of Responses:</strong> <span style='color: white'>" + d.Submissions + "</span>" + "<br>" 
     });
 svg.call(tip);
-
-
+// initial draw
+draw('Ackerman, Paige')
 
 </script>
 </body>
