@@ -41,9 +41,9 @@ var svg = d3.select('svg'),
 var x = d3.scaleBand().rangeRound([0,width]),
     y = d3.scaleLinear().rangeRound([height, 0])
 
-var color = d3.scaleOrdinal(d3.schemeCategory10)
 
 var draw = function(instructor) {
+    var color = d3.scaleOrdinal(d3.schemeCategory10)    
     var title = document.getElementById('title')
     title.innerText = instructor
 
@@ -90,13 +90,46 @@ var draw = function(instructor) {
             .attr('cy', function (d) { return y(d['Instructor Avg']) })
             .style('fill', function(d) { 
                 splitCourseName = d.Course.split(' ')
-                console.log(splitCourseName[0] + splitCourseName[1])
                 return color(splitCourseName[0] + splitCourseName[1])
+            })
+            .attr('class', function(d) {
+                splitCourseName = d.Course.split(' ')
+                return splitCourseName[0] + splitCourseName[1]
             })
             .on('mouseover', tip.show)
             .on('mouseout', tip.hide)
-    })
+        
+        var legend = g.selectAll(".legend")
+            .data(color.domain())
+            .enter().append("g")
+            .attr("class", "legend")
+            .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; })
+            .on('click', function(d) {
+                if (document.getElementsByClassName(d)[0].style.display == 'none') {
+                    d3.selectAll("." + d).style('display', '')    
+                }
+                else { 
+                    d3.selectAll("." + d).style('display', 'none')
+                }
+            });
 
+        // draw legend colored rectangles
+        legend.append("rect")
+            .attr("x", width - 18)
+            .attr("width", 18)
+            .attr("height", 18)
+            .style("fill", color);
+
+        // draw legend text
+        legend.append("text")
+            .attr("x", width - 24)
+            .attr("y", 9)
+            .attr("dy", ".35em")
+            .style("text-anchor", "end")
+            .text(function(d) { return d;})
+            
+
+    })
 }
 var tip = d3.tip()
     .attr('class', 'd3-tip')
