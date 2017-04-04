@@ -11,7 +11,7 @@
         <select id="input" onChange='handleSelectChange()'></select>
     </div>
     <svg width="1800" height="700"></svg>
-    <p>Please note: all scores with 5 or fewer responses have been discarded</p>
+    <p>Please note: all scores with 5 or fewer responses have been discarded. The size of the circles represent the class size, and is a non-linear scale (where x is class size, scaled by ln(x)^1.7). The colours represent different courses, and can be toggled by the legend on the right.</p>
 <script>
 (function createInputSelector() {
     var profs = ['Wittman, Hannah', 'Hammond, Gail', 'Elisia, Ingrid', 'Valley, William', 'Lamers, Yvonne', 'Liew, Mark', 'Riseman, Andrew', 'Stopps, Gregory', 'Black, Thomas', 'von Keyserlingk, Marina', 'Friesen, Erin', 'Novak, Elizabeth', 'Lewis, Delisa', 'Vercammen, James', 'Jovel, Eduardo', 'Fortin, Marie-Claude', 'Li-Chan, Eunice', 'Madadi Noei, Azita', 'Barr, Susan', 'Castellanos Hurtado, Valeria', 'Sandberg, Gary', 'Cullen, Laura', 'Simmons, Dean', 'Cerri, Ronaldo', 'Burton, Bruce', 'Lavkulich, Leslie', 'Izadi Shavakand, Fariba', 'Daly, Zachary', 'Smit, Rosanne', 'Holm, Wendy', 'Arthur, Jennifer', 'Cliff, Margaret', 'Cinq-Mars, Crystal', 'Lund, Steven', 'Green, Timothy', 'Rajamahendran, Rajadurai', 'Silper, Bruna', 'Snow, Mary', 'Anema, Aranka', 'Xu, Zhaoming', 'Allen, Kevin', 'Chan, Judy', 'McHugh, Duncan', 'Raisinghani, Latika', 'Measday, Vivien', 'Holowaychuk, Sean', 'Walker, Kristen', 'Hilmer, P', 'Shackleton, David', 'Brown, Sandra', 'Temu, Alice', 'Johnson, Michael', 'Saenz Garza, Natalia', 'Van Vuuren, Hendrik', 'Zawistowski, Jerzy', 'Meng, Guangtao', 'Zibrik, Deborah', 'Scaman, Christine', 'Tugault-Lafleur, Claire', 'Farrell, Anthony', 'McQueen, Jennifer', 'Cant, Meghann', 'Kovacevic, Jovana', 'Ormandy, Elisabeth', 'Ellis, Brian', 'Yaghmaee, Parastoo', 'Smukler, Sean', 'Schuppli, Catherine', 'Wilson, Julie', 'Gulati, Sumeet', 'Upadhyaya, Mahesh', 'Traviss, Karol', 'Chen, Xiumin', 'Ackerman, Paige', 'Novak, Mike', 'Marshall, Valin', 'Rushen, Jeffrey', 'Baker-French, Sophia', 'Ross, Nancy', 'Kitts, David', 'Miladinovic, Zoran', 'Phasuk, Suvaporn', 'Krzic, Maja', 'Kasten, Gerry', 'Chapman, Gwenneth', 'Wiseman, Kelleen', 'Whitfield, Kyly', 'Rojas, Alejandro', 'Wang, Siyun', 'Barichello, Richard', 'Yada, Rickey', 'Castellarin, Simone', 'Dubois, Sara', 'Akhtar, Yasmin', 'Burnett, Tracy', 'Cheung, Imelda', 'Cowan, Shannon', 'Rideout, Candice', 'Schreier, Hanspeter', 'Bomke, Arthur', 'Keeney, Kristie', 'Liceaga, Andrea', 'Jolliffe, Peter', 'Facon, Michel', 'Kafka, Tamar', 'Black, Jennifer', 'Sullivan, Thomas', 'Oikawa, Chris', 'Robertson, Rebecca', 'Makowska, Inez Joanna', 'Fraser, David', 'McAusland, Carol', 'Bennett, Christopher', 'Isman, Murray', 'McLean, Judy', 'Mroz, Lawrence', 'Wasik, Ronald', 'Weary, Daniel', 'Rankin, Joanne', 'Karakochuk, Crystal', 'Lu, Xiaonan', 'Alizadeh Pasdar, Nooshin', 'Skura, Brenton', 'McArthur, David']
@@ -88,7 +88,7 @@ var draw = function(instructor) {
             .data(instructorData)
             .enter().append('circle')
             .attr('class', 'dot')
-            .attr('r', 4)
+            .attr('r', function(d) { return Math.pow(Math.log(d['Responses Expected']), 1.7) })
             .attr('cx', function(d) { return x(d.Period.slice(0,4))+width/countUniquePeriod/2 })
             .attr('cy', function (d) { return y(d['Instructor Avg']) })
             .style('fill', function(d) { 
@@ -144,8 +144,9 @@ var tip = d3.tip()
         return "<strong>UMI6:</strong> <span style='color: white;'>" + avg + "</span>" + "<br>" 
             + "<strong>Course:</strong> <span style='color: white;'>" + d.Course + "</span>" + "<br>" 
             + "<strong>Term:</strong> <span style='color: white;'>" + d.Period + "</span>" + "<br>"
-            + "<strong>Course Size:</strong> <span style='color: white'>" + d['Responses Expected'] + "</span>" + "<br>"
             + "<strong>Total Number of Responses:</strong> <span style='color: white'>" + d.Submissions + "</span>" + "<br>" 
+            + "<strong>Course Size:</strong> <span style='color: white'>" + d['Responses Expected'] + "</span>" + "<br>"
+            + "<strong>Response Rate:</strong> <span style='color: white'>" + Math.round(d.Submissions/d['Responses Expected']*100) + "%" + "</span>" + "<br>" 
     });
 svg.call(tip);
 // initial draw
