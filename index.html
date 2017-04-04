@@ -95,6 +95,7 @@ var draw = function(instructor) {
                 splitCourseName = d.Course.split(' ')
                 return color(splitCourseName[0] + splitCourseName[1])
             })
+            .attr('opacity', 0.5)
             .attr('class', function(d) {
                 splitCourseName = d.Course.split(' ')
                 return splitCourseName[0] + splitCourseName[1]
@@ -111,11 +112,11 @@ var draw = function(instructor) {
             .on('click', function(d) {
                 if (document.getElementsByClassName(d)[0].style.display === 'none') {
                     d3.selectAll("." + d).style('display', '')    
-                    d3.select('#' + d).style('opacity', '1')
+                    d3.select('#' + d).style('opacity', 1)
                 }
                 else { 
                     d3.selectAll("." + d).style('display', 'none')
-                    d3.select('#' + d).style('opacity', '0.3')
+                    d3.select('#' + d).style('opacity', 0.3)
                 }
             });
 
