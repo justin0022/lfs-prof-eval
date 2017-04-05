@@ -72,7 +72,7 @@ var calcAvg = function(d, yearWithData) {
         }),
         R.mean
     )
-    return y(Math.round(calculateAverageForPeriod(yearWithData[period])*100)/100)
+    return calculateAverageForPeriod(yearWithData[period])
 }
 
 var draw = function(instructor) {
@@ -124,6 +124,12 @@ var draw = function(instructor) {
         var yearWithData = calculateAveragePerYearExcludingProf(data)
         //console.log("the year with data is: ", yearWithData)
 
+        var averages = instructorData.map(function(d) {
+            return calcAvg(d, yearWithData)
+        })
+
+        console.log(averages)
+
         var min = Math.round(d3.min(instructorData, function(d) { return d['Instructor Avg']})*100)/100
         var max = Math.round(d3.max(instructorData, function(d) { return d['Instructor Avg']})*100)/100
         var maxMinMessage = "The minimum score is " + min + ". " + "The maximum score is " + max + "."
@@ -166,11 +172,12 @@ var draw = function(instructor) {
             .on('mouseover', tip.show)
             .on('mouseout', tip.hide)
 
+//y(Math.round(calculateAverageForPeriod(yearWithData[period])*100)/100)
         g.selectAll('.avg-line')
             .data(instructorData)
             .enter().append('line')
-            .attr('y1', function(d) { return calcAvg(d, yearWithData) })
-             .attr('y2', function(d) { return calcAvg(d, yearWithData) })
+            .attr('y1', function(d) { return y(Math.round(calcAvg(d, yearWithData)*100)/100) })
+             .attr('y2', function(d) { return y(Math.round(calcAvg(d, yearWithData)*100)/100) })
              .attr('x1', function(d) { return x(d.Period.slice(0,4))+width/countUniquePeriod/2 - 12})
              .attr('x2', function(d) { return x(d.Period.slice(0,4))+width/countUniquePeriod/2 + 12})
              .attr('style', "stroke:rgb(0,0,0);stroke-width:3")
@@ -207,9 +214,7 @@ var draw = function(instructor) {
             .attr("y", 9)
             .attr("dy", ".35em")
             .style("text-anchor", "end")
-            .text(function(d) { return d;})
-            
-
+            .text(function(d) { return d })
     })
 }
 var tip = d3.tip()
