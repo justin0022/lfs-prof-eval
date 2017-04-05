@@ -177,6 +177,7 @@ var draw = function(instructor) {
                     + "<strong>Total Number of Responses:</strong> <span style='color: white'>" + d.Submissions + "</span>" + "<br>" 
                     + "<strong>Course Size:</strong> <span style='color: white'>" + d['Responses Expected'] + "</span>" + "<br>"
                     + "<strong>Response Rate:</strong> <span style='color: white'>" + Math.round(d.Submissions/d['Responses Expected']*100) + "%" + "</span>" + "<br>" 
+                    + "<strong>Delta:</strong> <span style='color: white'>" + Math.round((avg-Math.round(calcAvg(d, yearWithData)*100)/100)*100)/100 + "</span>" + "<br>" 
             });
 
         var avgTip = d3.tip()
