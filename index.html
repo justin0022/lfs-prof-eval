@@ -43,10 +43,8 @@ var handleSelectChange = function() {
 var handleAverageToggle = function() {
     if (document.getElementById('toggleAvg').checked) {
         d3.select('#parent').selectAll('line').style('display', '')
-        console.log("not here")
     } else {
         d3.select('#parent').selectAll('line').style('display', 'none')
-        console.log("here")
     }
 }
 
@@ -132,13 +130,10 @@ var draw = function(instructor) {
         )
 
         var yearWithData = calculateAveragePerYearExcludingProf(data)
-        //console.log("the year with data is: ", yearWithData)
 
         var averages = instructorData.map(function(d) {
             return calcAvg(d, yearWithData)
         })
-
-        //console.log(averages)
 
         var minArray = R.append(Number(d3.min(instructorData, function(d) { return d['Instructor Avg']})), averages)
         var maxArray = R.append(Number(d3.max(instructorData, function(d) { return d['Instructor Avg']})), averages)
@@ -148,12 +143,9 @@ var draw = function(instructor) {
         var maxMinMessage = "The minimum score is " + Math.round(d3.min(instructorData, function(d) { return d['Instructor Avg']})*100)/100 + ". " + "The maximum score is " + Math.round(d3.max(instructorData, function(d) { return d['Instructor Avg']})*100)/100 + "."
         maxmin.innerText = maxMinMessage
 
-        //console.log(min)
-
         x.domain(period)
         y.domain([min, max])
 
-        //console.log(d3.min(instructorData, function(d) { return d['Instructor Avg'] }))
         g.append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + height + ")")
