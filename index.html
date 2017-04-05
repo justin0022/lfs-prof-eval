@@ -83,6 +83,29 @@ var calcAvg = function(d, yearWithData) {
     )
     return calculateAverageForPeriod(yearWithData[period])
 }
+var calcClassSize = function(d, yearWithData) {
+    var period = d.Period.slice(0,4)
+    var course = getFloorOfCourse(d.Course)
+    var size = d["Responses Expected"]
+
+    var calculateAverageClassSizeForPeriod = R.pipe(
+        R.filter(function(d) {
+            return d.course === course
+        }),
+        R.filter(function(d) {
+            if (size < 50) {
+                return d.size < 50
+            } else {
+                return d.size >= 50
+            }
+        }),
+        R.map(function(d) {
+            return d.size
+        }),
+        R.mean
+    )
+    return calculateAverageClassSizeForPeriod(yearWithData[period])
+}
 
 var draw = function(instructor) {
     var color = d3.scaleOrdinal(d3.schemeCategory10)    
@@ -129,6 +152,8 @@ var draw = function(instructor) {
         )
 
         var yearWithData = calculateAveragePerYearExcludingProf(data)
+
+        console.log(yearWithData)
 
         var averages = instructorData.map(function(d) {
             return calcAvg(d, yearWithData)
@@ -177,6 +202,7 @@ var draw = function(instructor) {
             .html(function(d) { 
                 return "<strong>Average UMI6:</strong> <span style='color: white;'>" + Math.round(calcAvg(d, yearWithData)*100)/100 + "</span>" + "<br>" 
                     + "<strong>Year Level:</strong> <span style='color: white;'>" + getFloorOfCourse(d.Course) + "</span>" + "<br>" 
+                    + "<strong>Average Class Size:</strong> <span style='color: white;'>" + Math.round(calcClassSize(d, yearWithData)*100)/100 + "</span>" + "<br>" 
                      
             });
 
