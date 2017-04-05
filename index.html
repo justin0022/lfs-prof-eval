@@ -130,14 +130,20 @@ var draw = function(instructor) {
 
         console.log(averages)
 
-        var min = Math.round(d3.min(instructorData, function(d) { return d['Instructor Avg']})*100)/100
-        var max = Math.round(d3.max(instructorData, function(d) { return d['Instructor Avg']})*100)/100
-        var maxMinMessage = "The minimum score is " + min + ". " + "The maximum score is " + max + "."
+        var minArray = R.append(Number(d3.min(instructorData, function(d) { return d['Instructor Avg']})), averages)
+        var maxArray = R.append(Number(d3.max(instructorData, function(d) { return d['Instructor Avg']})), averages)
+        var min = Math.min.apply(null, minArray)
+        var max = Math.max.apply(null, maxArray)
+
+        var maxMinMessage = "The minimum score is " + Math.round(d3.min(instructorData, function(d) { return d['Instructor Avg']})*100)/100 + ". " + "The maximum score is " + Math.round(d3.max(instructorData, function(d) { return d['Instructor Avg']})*100)/100 + "."
         maxmin.innerText = maxMinMessage
 
-        x.domain(period)
-        y.domain([d3.min(instructorData, function(d) { return d['Instructor Avg'] }), d3.max(instructorData, function(d) { return d['Instructor Avg'] })])
+        console.log(min)
 
+        x.domain(period)
+        y.domain([min, max])
+
+        console.log(d3.min(instructorData, function(d) { return d['Instructor Avg'] }))
         g.append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + height + ")")
