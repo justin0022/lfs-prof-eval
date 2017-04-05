@@ -79,12 +79,10 @@ var draw = function(instructor) {
                 return d
             }),
             R.reduce(function(obj, d) {
-                console.log(d)
-                if (obj[d.Period] === undefined) {
-                    obj[d.Period] = []
-                } else {
-                    obj[d.Period] = obj[d.Period] 
-                }
+                var defaultToArray = R.defaultTo([])
+                
+                obj[d.Period] = defaultToArray(obj[d.Period])
+                
                 obj[d.Period].push({
                     course: d.Course,
                     size: d['Responses Expected'],
@@ -93,7 +91,6 @@ var draw = function(instructor) {
                 return obj
             }, {})
         )
-    
 
         console.log(calculateAveragePerYearExcludingProf(data))
 
