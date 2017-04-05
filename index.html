@@ -217,7 +217,7 @@ var draw = function(instructor) {
              .attr('x2', function(d) { return x(d.Period.slice(0,4))+width/countUniquePeriod/2 + 18})
              .attr('style', function(d) {
                 splitCourseName = d.Course.split(' ')
-                return "stroke:" + color(splitCourseName[0] + splitCourseName[1]) + ";" + "stroke-width:5"
+                return "stroke:" + color(splitCourseName[0] + splitCourseName[1]) + ";" + "stroke-width:8"
              })
              .attr('class', function(d) {
                 splitCourseName = d.Course.split(' ')
