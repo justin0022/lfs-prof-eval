@@ -88,9 +88,7 @@ var draw = function(instructor) {
         var instructorData = data.filter(function(d) {
             return d.Instructor === instructor
         })
-
-        //console.log(instructorData)
-
+        
         period = instructorData.map(function(d) { return d.Period.slice(0,4)}).sort(function (a,b) { return a-b })
 
         var countUniquePeriod = period.reduce(function(values, v) {
@@ -178,7 +176,6 @@ var draw = function(instructor) {
             .on('mouseover', tip.show)
             .on('mouseout', tip.hide)
 
-//y(Math.round(calculateAverageForPeriod(yearWithData[period])*100)/100)
         g.selectAll('.avg-line')
             .data(instructorData)
             .enter().append('line')
@@ -186,8 +183,15 @@ var draw = function(instructor) {
              .attr('y2', function(d) { return y(Math.round(calcAvg(d, yearWithData)*100)/100) })
              .attr('x1', function(d) { return x(d.Period.slice(0,4))+width/countUniquePeriod/2 - 12})
              .attr('x2', function(d) { return x(d.Period.slice(0,4))+width/countUniquePeriod/2 + 12})
-             .attr('style', "stroke:rgb(0,0,0);stroke-width:3")
-             .attr('class', function(d) { return })
+             .attr('style', function(d) {
+                splitCourseName = d.Course.split(' ')
+                return "stroke:" + color(splitCourseName[0] + splitCourseName[1]) + ";" + "stroke-width:3"
+             })
+             .attr('class', function(d) {
+                splitCourseName = d.Course.split(' ')
+                return splitCourseName[0] + splitCourseName[1]
+            })
+            .attr('opacity', 0.5)
             
         var legend = g.selectAll(".legend")
             .data(color.domain())
