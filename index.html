@@ -157,6 +157,26 @@ var draw = function(instructor) {
             .attr("text-anchor", "end")
             .text("UMI6");
 
+        var tip = d3.tip()
+            .attr('class', 'd3-tip')
+            .html(function(d) { 
+                avg = Math.round(Number(d['Instructor Avg'])*100) / 100;
+                return "<strong>UMI6:</strong> <span style='color: white;'>" + avg + "</span>" + "<br>" 
+                    + "<strong>Course:</strong> <span style='color: white;'>" + d.Course + "</span>" + "<br>" 
+                    + "<strong>Term:</strong> <span style='color: white;'>" + d.Period + "</span>" + "<br>"
+                    + "<strong>Total Number of Responses:</strong> <span style='color: white'>" + d.Submissions + "</span>" + "<br>" 
+                    + "<strong>Course Size:</strong> <span style='color: white'>" + d['Responses Expected'] + "</span>" + "<br>"
+                    + "<strong>Response Rate:</strong> <span style='color: white'>" + Math.round(d.Submissions/d['Responses Expected']*100) + "%" + "</span>" + "<br>" 
+            });
+
+        var avgTip = d3.tip()
+            .attr('class', 'd3-tip')
+            .html(function(d) { 
+                return "<strong>Average UMI6:</strong> <span style='color: white;'>" + Math.round(calcAvg(d, yearWithData)*100)/100 + "</span>" + "<br>" 
+                    + "<strong>Year Level:</strong> <span style='color: white;'>" + getFloorOfCourse(d.Course) + "</span>" + "<br>" 
+                     
+            });
+
         g.selectAll('.dot')
             .data(instructorData)
             .enter().append('circle')
@@ -185,13 +205,15 @@ var draw = function(instructor) {
              .attr('x2', function(d) { return x(d.Period.slice(0,4))+width/countUniquePeriod/2 + 12})
              .attr('style', function(d) {
                 splitCourseName = d.Course.split(' ')
-                return "stroke:" + color(splitCourseName[0] + splitCourseName[1]) + ";" + "stroke-width:3"
+                return "stroke:" + color(splitCourseName[0] + splitCourseName[1]) + ";" + "stroke-width:5"
              })
              .attr('class', function(d) {
                 splitCourseName = d.Course.split(' ')
                 return splitCourseName[0] + splitCourseName[1]
             })
             .attr('opacity', 0.5)
+            .on('mouseover', avgTip.show)
+            .on('mouseout', avgTip.hide)
             
         var legend = g.selectAll(".legend")
             .data(color.domain())
@@ -225,20 +247,12 @@ var draw = function(instructor) {
             .attr("dy", ".35em")
             .style("text-anchor", "end")
             .text(function(d) { return d })
+            
+        svg.call(tip)
+        svg.call(avgTip)        
+
     })
 }
-var tip = d3.tip()
-    .attr('class', 'd3-tip')
-    .html(function(d) { 
-        avg = Math.round(Number(d['Instructor Avg'])*100) / 100;
-        return "<strong>UMI6:</strong> <span style='color: white;'>" + avg + "</span>" + "<br>" 
-            + "<strong>Course:</strong> <span style='color: white;'>" + d.Course + "</span>" + "<br>" 
-            + "<strong>Term:</strong> <span style='color: white;'>" + d.Period + "</span>" + "<br>"
-            + "<strong>Total Number of Responses:</strong> <span style='color: white'>" + d.Submissions + "</span>" + "<br>" 
-            + "<strong>Course Size:</strong> <span style='color: white'>" + d['Responses Expected'] + "</span>" + "<br>"
-            + "<strong>Response Rate:</strong> <span style='color: white'>" + Math.round(d.Submissions/d['Responses Expected']*100) + "%" + "</span>" + "<br>" 
-    });
-svg.call(tip);
 
 // initial draw
 handleSelectChange()
