@@ -42,9 +42,11 @@ var handleSelectChange = function() {
 
 var handleAverageToggle = function() {
     if (document.getElementById('toggleAvg').checked) {
-        // call function
+        d3.select('#parent').selectAll('line').style('display', '')
+        console.log("not here")
     } else {
-        d3.selectAll('.line').attr('display', 'none')
+        d3.select('#parent').selectAll('line').style('display', 'none')
+        console.log("here")
     }
 }
 
@@ -211,8 +213,8 @@ var draw = function(instructor) {
             .enter().append('line')
             .attr('y1', function(d) { return y(Math.round(calcAvg(d, yearWithData)*100)/100) })
              .attr('y2', function(d) { return y(Math.round(calcAvg(d, yearWithData)*100)/100) })
-             .attr('x1', function(d) { return x(d.Period.slice(0,4))+width/countUniquePeriod/2 - 12})
-             .attr('x2', function(d) { return x(d.Period.slice(0,4))+width/countUniquePeriod/2 + 12})
+             .attr('x1', function(d) { return x(d.Period.slice(0,4))+width/countUniquePeriod/2 - 18})
+             .attr('x2', function(d) { return x(d.Period.slice(0,4))+width/countUniquePeriod/2 + 18})
              .attr('style', function(d) {
                 splitCourseName = d.Course.split(' ')
                 return "stroke:" + color(splitCourseName[0] + splitCourseName[1]) + ";" + "stroke-width:5"
@@ -224,6 +226,7 @@ var draw = function(instructor) {
             .attr('opacity', 0.5)
             .on('mouseover', avgTip.show)
             .on('mouseout', avgTip.hide)
+            .style('display', 'none')
             
         var legend = g.selectAll(".legend")
             .data(color.domain())
@@ -266,6 +269,5 @@ var draw = function(instructor) {
 
 // initial draw
 handleSelectChange()
-
 </script>
 </body>
