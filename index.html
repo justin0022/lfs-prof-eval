@@ -70,22 +70,16 @@ var draw = function(instructor) {
             }
             return values;
         }, { set: {}, count: 0 }).count;
-
-        var underOverClassSize50 = function(d) {
-            if (d['Responses Expected'] < 50) {
-                return d.filter(function(d) { return d['Responses Expected'] < 50 })
-            } else return d.filter(function(d) { return d['Responses Expected'] >= 50 })
-        }
-
+        
         var calculateAveragePerYearExcludingProf = R.pipe(
             R.filter(function (d) { return d.Instructor !== instructor }),
             R.map(function (d) { 
                 d.Course = d.Course.split(" ")[1] 
                 d.Period = d.Period.split("").slice(0,4).join("")
                 return d
-            }),
-
+            })
         )
+    
 
         console.log(calculateAveragePerYearExcludingProf(data))
 
