@@ -10,7 +10,8 @@
     <div style="margin-left: 30px;">
         <h1 id="title"></h1>
         <p id="max-min"></p>
-        <select id="input" onChange='handleSelectChange()'></select>
+        <select id="selectProf" onChange='handleSelectChange()' style="display: inline-block"></select>
+        <label><input id="toggleAvg" type="checkbox" onclick="handleAverageToggle()" style="display: inline-block"/>Toggle Averages</label>
     </div>
     <svg width="1800" height="700"></svg>
     <p>Please note: all scores with 5 or fewer responses have been discarded. The size of the circles represent the class size, and is a non-linear scale (where x is class size, scaled by ln(x)^1.7). The colours represent different courses, and can be toggled by the legend on the right.</p>
@@ -20,7 +21,7 @@
     
     var sortByLastName = profs.sort()
 
-    var sel = document.getElementById('input')
+    var sel = document.getElementById('selectProf')
 
     var populateSelector = sortByLastName.map(function(x) {
         var opt = document.createElement('option')
@@ -33,9 +34,18 @@
 var handleSelectChange = function() {
     // clears svg
     d3.select('#parent').selectAll('*').remove()
-    var optionValue = document.getElementById('input').value
+    var optionValue = document.getElementById('selectProf').value
     // creates visualization from selected prof
     draw(optionValue)
+    handleAverageToggle()
+}
+
+var handleAverageToggle = function() {
+    if (document.getElementById('toggleAvg').checked) {
+        // call function
+    } else {
+        d3.selectAll('.line').attr('display', 'none')
+    }
 }
 
 var svg = d3.select('svg'),
@@ -126,7 +136,7 @@ var draw = function(instructor) {
             return calcAvg(d, yearWithData)
         })
 
-        console.log(averages)
+        //console.log(averages)
 
         var minArray = R.append(Number(d3.min(instructorData, function(d) { return d['Instructor Avg']})), averages)
         var maxArray = R.append(Number(d3.max(instructorData, function(d) { return d['Instructor Avg']})), averages)
@@ -136,12 +146,12 @@ var draw = function(instructor) {
         var maxMinMessage = "The minimum score is " + Math.round(d3.min(instructorData, function(d) { return d['Instructor Avg']})*100)/100 + ". " + "The maximum score is " + Math.round(d3.max(instructorData, function(d) { return d['Instructor Avg']})*100)/100 + "."
         maxmin.innerText = maxMinMessage
 
-        console.log(min)
+        //console.log(min)
 
         x.domain(period)
         y.domain([min, max])
 
-        console.log(d3.min(instructorData, function(d) { return d['Instructor Avg'] }))
+        //console.log(d3.min(instructorData, function(d) { return d['Instructor Avg'] }))
         g.append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + height + ")")
@@ -196,7 +206,7 @@ var draw = function(instructor) {
             .on('mouseover', tip.show)
             .on('mouseout', tip.hide)
 
-        g.selectAll('.avg-line')
+        g.selectAll('.line')
             .data(instructorData)
             .enter().append('line')
             .attr('y1', function(d) { return y(Math.round(calcAvg(d, yearWithData)*100)/100) })
