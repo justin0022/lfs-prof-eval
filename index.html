@@ -37,7 +37,6 @@ var handleSelectChange = function() {
     var optionValue = document.getElementById('selectProf').value
     // creates visualization from selected prof
     draw(optionValue)
-    handleAverageToggle()
 }
 
 var handleAverageToggle = function() {
@@ -255,7 +254,7 @@ var draw = function(instructor) {
             
         svg.call(tip)
         svg.call(avgTip)        
-
+        handleAverageToggle()
     })
 }
 
