@@ -34,10 +34,8 @@ var handleSelectChange = function() {
     // clears svg
     d3.select('#parent').selectAll('*').remove()
     var optionValue = document.getElementById('input').value
-    // creats visualization from selected prof
-
-    //temp for testing
-    draw("Akhtar, Yasmin")
+    // creates visualization from selected prof
+    draw(optionValue)
 }
 
 var svg = d3.select('svg'),
@@ -52,6 +50,29 @@ var x = d3.scaleBand().rangeRound([0,width]),
 // util functions
 var getFloorOfCourse = function(x) {
     return Math.floor(Number(x.split(" ")[1].split("").slice(0,3).join(""))/100)*100
+}
+var calcAvg = function(d, yearWithData) {
+    var period = d.Period.slice(0,4)
+    var course = getFloorOfCourse(d.Course)
+    var size = d["Responses Expected"]
+
+    var calculateAverageForPeriod = R.pipe(
+        R.filter(function(d) {
+            return d.course === course
+        }),
+        R.filter(function(d) {
+            if (size < 50) {
+                return d.size < 50
+            } else {
+                return d.size >= 50
+            }
+        }),
+        R.map(function(d) {
+            return d.avg
+        }),
+        R.mean
+    )
+    return y(Math.round(calculateAverageForPeriod(yearWithData[period])*100)/100)
 }
 
 var draw = function(instructor) {
@@ -148,59 +169,13 @@ var draw = function(instructor) {
         g.selectAll('.avg-line')
             .data(instructorData)
             .enter().append('line')
-            .attr('y1', function(d) { 
-                var period = d.Period.slice(0,4)
-                var course = getFloorOfCourse(d.Course)
-                var size = d["Responses Expected"]
-
-                var calculateAverageForPeriod = R.pipe(
-                    R.filter(function(d) {
-                        return d.course === course
-                    }),
-                    R.filter(function(d) {
-                        if (size < 50) {
-                            return d.size < 50
-                        } else {
-                            return d.size >= 50
-                        }
-                    }),
-                    R.map(function(d) {
-                        return d.avg
-                    }),
-                    R.mean
-                )
-                //console.log("the period is ", period, "the class size is ", size, "the course year is ", course, Math.round(calculateAverageForPeriod(yearWithData[period])*100)/100)
-                return y(Math.round(calculateAverageForPeriod(yearWithData[period])*100)/100)
-             })
-             .attr('y2', function(d) { 
-                var period = d.Period.slice(0,4)
-                var course = getFloorOfCourse(d.Course)
-                var size = d["Responses Expected"]
-
-                var calculateAverageForPeriod = R.pipe(
-                    R.filter(function(d) {
-                        return d.course === course
-                    }),
-                    R.filter(function(d) {
-                        if (size < 50) {
-                            return d.size < 50
-                        } else {
-                            return d.size >= 50
-                        }
-                    }),
-                    R.map(function(d) {
-                        return d.avg
-                    }),
-                    R.mean
-                )
-                //console.log("the period is ", period, "the class size is ", size, "the course year is ", course, Math.round(calculateAverageForPeriod(yearWithData[period])*100)/100)
-                return y(Math.round(calculateAverageForPeriod(yearWithData[period])*100)/100)
-             })
-             .attr('x1', function(d) { return x(d.Period.slice(0,4))+width/countUniquePeriod/2 - 8})
-             .attr('x2', function(d) { return x(d.Period.slice(0,4))+width/countUniquePeriod/2 + 8})
+            .attr('y1', function(d) { return calcAvg(d, yearWithData) })
+             .attr('y2', function(d) { return calcAvg(d, yearWithData) })
+             .attr('x1', function(d) { return x(d.Period.slice(0,4))+width/countUniquePeriod/2 - 12})
+             .attr('x2', function(d) { return x(d.Period.slice(0,4))+width/countUniquePeriod/2 + 12})
              .attr('style', "stroke:rgb(0,0,0);stroke-width:3")
              .attr('class', function(d) { return })
-
+            
         var legend = g.selectAll(".legend")
             .data(color.domain())
             .enter().append("g")
