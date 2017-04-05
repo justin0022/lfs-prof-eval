@@ -47,6 +47,11 @@ var svg = d3.select('svg'),
 var x = d3.scaleBand().rangeRound([0,width]),
     y = d3.scaleLinear().rangeRound([height, 0])
 
+// util functions
+var getFloorOfCourse = function(x) {
+    return Math.floor(x.split(" ")[1]/100)*100
+}
+
 var draw = function(instructor) {
     var color = d3.scaleOrdinal(d3.schemeCategory10)    
     var title = document.getElementById('title')
@@ -61,6 +66,8 @@ var draw = function(instructor) {
             return d.Instructor === instructor
         })
 
+        console.log(instructorData)
+
         period = instructorData.map(function(d) { return d.Period.slice(0,4)}).sort(function (a,b) { return a-b })
 
         var countUniquePeriod = period.reduce(function(values, v) {
@@ -74,31 +81,29 @@ var draw = function(instructor) {
         var calculateAveragePerYearExcludingProf = R.pipe(
             R.filter(function (d) { return d.Instructor !== instructor }),
             R.map(function (d) { 
-                d.Course = d.Course.split(" ")[1] 
+                d.Course = getFloorOfCourse(d.Course)
                 d.Period = d.Period.split("").slice(0,4).join("")
                 return d
             }),
             R.reduce(function(obj, d) {
                 var defaultToArray = R.defaultTo([])
-                
                 obj[d.Period] = defaultToArray(obj[d.Period])
                 
                 obj[d.Period].push({
                     course: d.Course,
-                    size: d['Responses Expected'],
-                    avg: d['Instructor Avg']
+                    size: Number(d['Responses Expected']),
+                    avg: Number(d['Instructor Avg'])
                 })
                 return obj
             }, {})
         )
 
-        console.log(calculateAveragePerYearExcludingProf(data))
+        var yearWithData = calculateAveragePerYearExcludingProf(data)
+        console.log("the year with data is: ", yearWithData)
 
         var min = Math.round(d3.min(instructorData, function(d) { return d['Instructor Avg']})*100)/100
         var max = Math.round(d3.max(instructorData, function(d) { return d['Instructor Avg']})*100)/100
-
         var maxMinMessage = "The minimum score is " + min + ". " + "The maximum score is " + max + "."
-
         maxmin.innerText = maxMinMessage
 
         x.domain(period)
@@ -137,7 +142,15 @@ var draw = function(instructor) {
             })
             .on('mouseover', tip.show)
             .on('mouseout', tip.hide)
-        
+
+        g.selectAll('.avg-line')
+            .data(instructorData)
+            .enter().append('line')
+            .attr('x1', function(d) { 
+                var period = d.Period.slice(0,4)
+                var course = getFloorOfCourse(d.Course)
+             })
+
         var legend = g.selectAll(".legend")
             .data(color.domain())
             .enter().append("g")
@@ -186,6 +199,7 @@ var tip = d3.tip()
             + "<strong>Response Rate:</strong> <span style='color: white'>" + Math.round(d.Submissions/d['Responses Expected']*100) + "%" + "</span>" + "<br>" 
     });
 svg.call(tip);
+
 // initial draw
 handleSelectChange()
 
