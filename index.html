@@ -77,7 +77,21 @@ var draw = function(instructor) {
                 d.Course = d.Course.split(" ")[1] 
                 d.Period = d.Period.split("").slice(0,4).join("")
                 return d
-            })
+            }),
+            R.reduce(function(obj, d) {
+                console.log(d)
+                if (obj[d.Period] === undefined) {
+                    obj[d.Period] = []
+                } else {
+                    obj[d.Period] = obj[d.Period] 
+                }
+                obj[d.Period].push({
+                    course: d.Course,
+                    size: d['Responses Expected'],
+                    avg: d['Instructor Avg']
+                })
+                return obj
+            }, {})
         )
     
 
