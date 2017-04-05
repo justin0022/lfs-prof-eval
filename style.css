@@ -4,8 +4,8 @@
   line-height: 1;
   font-weight: bold;
   padding: 12px;
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
+  background: white;
+  color: black;
   border-radius: 2px;
   pointer-events: none;
 }
