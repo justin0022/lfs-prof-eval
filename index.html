@@ -3,6 +3,7 @@
 <header>
     <script src="./node_modules/d3/build/d3.min.js"></script>
     <script src="./node_modules/d3-tip/index.js"></script>
+    <script src="./node_modules/ramda/dist/ramda.min.js"></script>
     <link rel="stylesheet" type="text/css" href="./style.css">
 </header>
 <body>
@@ -33,6 +34,7 @@ var handleSelectChange = function() {
     // clears svg
     d3.select('#parent').selectAll('*').remove()
     var optionValue = document.getElementById('input').value
+    // creats visualization from selected prof
     draw(optionValue)
 }
 
@@ -44,7 +46,6 @@ var svg = d3.select('svg'),
 
 var x = d3.scaleBand().rangeRound([0,width]),
     y = d3.scaleLinear().rangeRound([height, 0])
-
 
 var draw = function(instructor) {
     var color = d3.scaleOrdinal(d3.schemeCategory10)    
@@ -59,6 +60,7 @@ var draw = function(instructor) {
         var instructorData = data.filter(function(d) {
             return d.Instructor === instructor
         })
+
         period = instructorData.map(function(d) { return d.Period.slice(0,4)}).sort(function (a,b) { return a-b })
 
         var countUniquePeriod = period.reduce(function(values, v) {
@@ -68,6 +70,24 @@ var draw = function(instructor) {
             }
             return values;
         }, { set: {}, count: 0 }).count;
+
+        var underOverClassSize50 = function(d) {
+            if (d['Responses Expected'] < 50) {
+                return d.filter(function(d) { return d['Responses Expected'] < 50 })
+            } else return d.filter(function(d) { return d['Responses Expected'] >= 50 })
+        }
+
+        var calculateAveragePerYearExcludingProf = R.pipe(
+            R.filter(function (d) { return d.Instructor !== instructor }),
+            R.map(function (d) { 
+                d.Course = d.Course.split(" ")[1] 
+                d.Period = d.Period.split("").slice(0,4).join("")
+                return d
+            }),
+
+        )
+
+        console.log(calculateAveragePerYearExcludingProf(data))
 
         var min = Math.round(d3.min(instructorData, function(d) { return d['Instructor Avg']})*100)/100
         var max = Math.round(d3.max(instructorData, function(d) { return d['Instructor Avg']})*100)/100
@@ -162,7 +182,7 @@ var tip = d3.tip()
     });
 svg.call(tip);
 // initial draw
-draw('Ackerman, Paige')
+handleSelectChange()
 
 </script>
 </body>
