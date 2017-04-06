@@ -170,19 +170,26 @@ var draw = function(instructor) {
         var tip = d3.tip()
             .attr('class', 'd3-tip')
             .html(function(d) { 
+                
                 avg = Math.round(Number(d['Instructor Avg'])*100) / 100;
+
+                var style = "<span style='color: green'>"
+                if ((Math.round((avg-Math.round(calcAvg(d, yearWithData)*100)/100)*100)/100) < 0) {
+                    style = "<span style='color: red'>" 
+                } 
+
                 return "<strong>UMI6:</strong> <span style='color: black;'>" + avg + "</span>" + "<br>" 
                     + "<strong>Course:</strong> <span style='color: black;'>" + d.Course + "</span>" + "<br>" 
                     + "<strong>Term:</strong> <span style='color: black;'>" + d.Period + "</span>" + "<br>"
                     + "<strong>Total Number of Responses:</strong> <span style='color: black'>" + d.Submissions + "</span>" + "<br>" 
                     + "<strong>Course Size:</strong> <span style='color: black'>" + d['Responses Expected'] + "</span>" + "<br>"
                     + "<strong>Response Rate:</strong> <span style='color: black'>" + Math.round(d.Submissions/d['Responses Expected']*100) + "%" + "</span>" + "<br>" 
-                    + "<strong>Delta:</strong> <span style='color: black'>" + Math.round((avg-Math.round(calcAvg(d, yearWithData)*100)/100)*100)/100 + "</span>" + "<br>" 
+                    + "<strong>Delta:</strong>" + style + " " + Math.round((avg-Math.round(calcAvg(d, yearWithData)*100)/100)*100)/100 + "</span>" + "<br>" 
             });
 
         var avgTip = d3.tip()
             .attr('class', 'd3-tip')
-            .html(function(d) { 
+            .html(function(d) {                 
                 return "<strong>Average UMI6:</strong> <span style='color: black;'>" + Math.round(calcAvg(d, yearWithData)*100)/100 + "</span>" + "<br>" 
                     + "<strong>Year Level:</strong> <span style='color: black;'>" + getFloorOfCourse(d.Course) + "</span>" + "<br>" 
                     + "<strong>Average Class Size:</strong> <span style='color: black;'>" + Math.round(calcClassSize(d, yearWithData)*100)/100 + "</span>" + "<br>" 
