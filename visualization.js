@@ -16,6 +16,7 @@
 var handleSelectChange = function() {
     // clears svg
     d3.select('#parent').selectAll('*').remove()
+    d3.selectAll('.d3-tip').remove()
     var optionValue = document.getElementById('selectProf').value
     // creates visualization from selected prof
     draw(optionValue)
