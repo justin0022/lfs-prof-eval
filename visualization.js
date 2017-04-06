@@ -63,6 +63,10 @@ var calcAvg = function(d, yearWithData) {
         }),
         R.mean
     )
+    console.log(calculateAverageForPeriod(yearWithData[period]))
+    if (isNaN(calculateAverageForPeriod(yearWithData[period]))) {
+        return 0;
+    } 
     return calculateAverageForPeriod(yearWithData[period])
 }
 var calcClassSize = function(d, yearWithData) {
@@ -127,7 +131,8 @@ var draw = function(instructor) {
                 obj[d.Period].push({
                     course: d.Course,
                     size: Number(d['Responses Expected']),
-                    avg: Number(d['Instructor Avg'])
+                    avg: Number(d['Instructor Avg']),
+                    instructor: d.Instructor
                 })
                 return obj
             }, {})
@@ -135,11 +140,13 @@ var draw = function(instructor) {
 
         var yearWithData = calculateAveragePerYearExcludingProf(data)
 
-        console.log(yearWithData)
+        //console.log(yearWithData)
 
         var averages = instructorData.map(function(d) {
             return calcAvg(d, yearWithData)
         })
+
+        //console.log(instructorData)
 
         var minArray = R.append(Number(d3.min(instructorData, function(d) { return d['Instructor Avg']})), averages)
         var maxArray = R.append(Number(d3.max(instructorData, function(d) { return d['Instructor Avg']})), averages)
