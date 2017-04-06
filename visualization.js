@@ -65,7 +65,7 @@ var calcAvg = function(d, yearWithData) {
     )
     console.log(calculateAverageForPeriod(yearWithData[period]))
     if (isNaN(calculateAverageForPeriod(yearWithData[period]))) {
-        return 0;
+        return -1;
     } 
     return calculateAverageForPeriod(yearWithData[period])
 }
@@ -140,7 +140,7 @@ var draw = function(instructor) {
 
         var yearWithData = calculateAveragePerYearExcludingProf(data)
 
-        //console.log(yearWithData)
+        console.log(yearWithData)
 
         var averages = instructorData.map(function(d) {
             return calcAvg(d, yearWithData)
@@ -150,7 +150,8 @@ var draw = function(instructor) {
 
         var minArray = R.append(Number(d3.min(instructorData, function(d) { return d['Instructor Avg']})), averages)
         var maxArray = R.append(Number(d3.max(instructorData, function(d) { return d['Instructor Avg']})), averages)
-        var min = Math.min.apply(null, minArray)
+        var minArrayFiltered = minArray.filter(function(x) { return x >= 0 })
+        var min = Math.min.apply(null, minArrayFiltered)
         var max = Math.max.apply(null, maxArray)
 
         var maxMinMessage = "The minimum score is " + Math.round(d3.min(instructorData, function(d) { return d['Instructor Avg']})*100)/100 + ". " + "The maximum score is " + Math.round(d3.max(instructorData, function(d) { return d['Instructor Avg']})*100)/100 + "."
