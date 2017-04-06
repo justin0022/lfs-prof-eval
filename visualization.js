@@ -174,7 +174,7 @@ var draw = function(instructor) {
             .html(function(d) { 
                 
                 avg = Math.round(Number(d['Instructor Avg'])*100) / 100;
-                console.log(Math.round(calcAvg(d, yearWithData)*100)/100)
+                
                 var style = "<span style='color: green'>"
                 if ((Math.round((avg-Math.round(calcAvg(d, yearWithData)*100)/100)*100)/100) < 0) {
                     style = "<span style='color: red'>" 
