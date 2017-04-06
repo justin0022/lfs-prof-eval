@@ -61,7 +61,6 @@ var calcAvg = function(d, yearWithData) {
         }),
         R.mean
     )
-    console.log(calculateAverageForPeriod(yearWithData[period]))
     if (isNaN(calculateAverageForPeriod(yearWithData[period]))) {
         return -1;
     } 
@@ -138,13 +137,9 @@ var draw = function(instructor) {
 
         var yearWithData = calculateAveragePerYearExcludingProf(data)
 
-        console.log(yearWithData)
-
         var averages = instructorData.map(function(d) {
             return calcAvg(d, yearWithData)
         })
-
-        //console.log(instructorData)
 
         var minArray = R.append(Number(d3.min(instructorData, function(d) { return d['Instructor Avg']})), averages)
         var maxArray = R.append(Number(d3.max(instructorData, function(d) { return d['Instructor Avg']})), averages)
@@ -178,11 +173,15 @@ var draw = function(instructor) {
             .html(function(d) { 
                 
                 avg = Math.round(Number(d['Instructor Avg'])*100) / 100;
-
+                console.log(Math.round(calcAvg(d, yearWithData)*100)/100)
                 var style = "<span style='color: green'>"
                 if ((Math.round((avg-Math.round(calcAvg(d, yearWithData)*100)/100)*100)/100) < 0) {
                     style = "<span style='color: red'>" 
                 } 
+                var delta = Math.round((avg-Math.round(calcAvg(d, yearWithData)*100)/100)*100)/100
+                if (Math.round(calcAvg(d, yearWithData)*100)/100 === -1) {
+                    delta = "not applicable"
+                }
 
                 return "<strong>UMI6:</strong> <span style='color: black;'>" + avg + "</span>" + "<br>" 
                     + "<strong>Course:</strong> <span style='color: black;'>" + d.Course + "</span>" + "<br>" 
@@ -190,7 +189,7 @@ var draw = function(instructor) {
                     + "<strong>Total Number of Responses:</strong> <span style='color: black'>" + d.Submissions + "</span>" + "<br>" 
                     + "<strong>Course Size:</strong> <span style='color: black'>" + d['Responses Expected'] + "</span>" + "<br>"
                     + "<strong>Response Rate:</strong> <span style='color: black'>" + Math.round(d.Submissions/d['Responses Expected']*100) + "%" + "</span>" + "<br>" 
-                    + "<strong>Delta:</strong>" + style + " " + Math.round((avg-Math.round(calcAvg(d, yearWithData)*100)/100)*100)/100 + "</span>" + "<br>" 
+                    + "<strong>Delta:</strong>" + style + " " + delta + "</span>" + "<br>" 
             });
 
         var avgTip = d3.tip()
