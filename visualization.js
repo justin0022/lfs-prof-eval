@@ -62,9 +62,26 @@ var calcAvg = function(d, yearWithData) {
         }),
         R.mean
     )
+    
+    // var testFunc = R.pipe(
+    //     R.filter(function(d) {
+    //         return d.course === course
+    //     }),
+    //     R.filter(function(d) {
+    //         if (size < 50) {
+    //             return d.size < 50
+    //         } else {
+    //             return d.size >= 50
+    //         }
+    //     })
+    // )
+
+    // console.log(period, testFunc(yearWithData[period]))
+
     if (isNaN(calculateAverageForPeriod(yearWithData[period]))) {
         return -1;
     } 
+
     return calculateAverageForPeriod(yearWithData[period])
 }
 var calcClassSize = function(d, yearWithData) {
@@ -141,6 +158,8 @@ var draw = function(instructor) {
         var averages = instructorData.map(function(d) {
             return calcAvg(d, yearWithData)
         })
+
+        //console.log(averages)
 
         var minArray = R.append(Number(d3.min(instructorData, function(d) { return d['Instructor Avg']})), averages)
         var maxArray = R.append(Number(d3.max(instructorData, function(d) { return d['Instructor Avg']})), averages)
