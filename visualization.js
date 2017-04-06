@@ -23,8 +23,6 @@ var handleSelectChange = function() {
 
 var handleAverageToggle = function() {
     if (document.getElementById('toggleAvg').checked) {
-        d3.selectAll('.avg-line').style('display', '')
-    } else {
         d3.selectAll('.avg-line').style('display', 'none')
     }
 }
@@ -237,7 +235,6 @@ var draw = function(instructor) {
             })
             .on('mouseover', avgTip.show)
             .on('mouseout', avgTip.hide)
-            .style('display', 'none')
             
         var legend = g.selectAll(".legend")
             .data(color.domain())
