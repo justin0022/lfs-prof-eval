@@ -62,21 +62,6 @@ var calcAvg = function(d, yearWithData) {
         }),
         R.mean
     )
-    
-    // var testFunc = R.pipe(
-    //     R.filter(function(d) {
-    //         return d.course === course
-    //     }),
-    //     R.filter(function(d) {
-    //         if (size < 50) {
-    //             return d.size < 50
-    //         } else {
-    //             return d.size >= 50
-    //         }
-    //     })
-    // )
-
-    // console.log(period, testFunc(yearWithData[period]))
 
     if (isNaN(calculateAverageForPeriod(yearWithData[period]))) {
         return -1;
