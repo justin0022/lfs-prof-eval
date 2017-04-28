@@ -232,7 +232,11 @@ var draw = function(instructor) {
              .attr('y2', function(d) { return y(Math.round(calcAvg(d, yearWithData)*100)/100) })
              .attr('x1', function(d) { return x(d.Period.slice(0,4))+width/countUniquePeriod/2 - 18})
              .attr('x2', function(d) { return x(d.Period.slice(0,4))+width/countUniquePeriod/2 + 18})
-             .attr('style', "stroke:rgb(0,0,0);stroke-width:6")
+             .attr('style', "stroke-width:6") //stroke:rgb(0,0,0);
+            .style('stroke', (d) => {
+                splitCourseName = d.Course.split(' ')
+                return color(splitCourseName[0] + splitCourseName[1])
+            })
              .attr('class', function(d) {
                 splitCourseName = d.Course.split(' ')
                 return splitCourseName[0] + splitCourseName[1] + " " + 'avg-line'
